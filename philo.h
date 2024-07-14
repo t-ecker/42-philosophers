@@ -34,5 +34,9 @@ typedef struct s_philo
 
 
 
+int	ft_atoi(const char *str);
+void *check_stop(void *arg);
+
+
 
 #endif
