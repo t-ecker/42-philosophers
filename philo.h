@@ -7,6 +7,9 @@
 #include <pthread.h>
 #include <sys/time.h>
 
+
+typedef struct s_philo t_philo;
+
 typedef struct s_data
 {
 	int philo_count;
@@ -16,6 +19,7 @@ typedef struct s_data
     int max_meals;
     int stop;
     long start_time;
+    t_philo *philo;
     pthread_mutex_t stop_m;
     pthread_mutex_t write_m;
     pthread_mutex_t eating;
@@ -24,12 +28,13 @@ typedef struct s_data
 typedef struct s_philo
 {
 	int num;
-	int eat_count;
     long last_meal;
+	int meal_count;
+    int eating;
     t_data *data;
 	pthread_t thread;
-	pthread_mutex_t left_f;
-	pthread_mutex_t right_f;
+	pthread_mutex_t *left_f;
+	pthread_mutex_t *right_f;
 }	t_philo;
 
 
