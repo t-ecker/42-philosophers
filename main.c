@@ -110,6 +110,12 @@ void routine(t_philo *philo)
 
 	pthread_mutex_lock(philo->left_f);
 	write_message("has taken a fork", philo->data, philo->num);
+	if (philo->data->philo_count == 1)
+	{
+		ft_usleep(philo->data->time_to_die);
+		pthread_mutex_unlock(philo->left_f);
+		return ;
+	}
 	pthread_mutex_lock(philo->right_f);
 	write_message("has taken a fork", philo->data, philo->num);
 	philo->eating = 1;
@@ -147,9 +153,9 @@ int check_meals_eaten(t_data *data)
         pthread_mutex_lock(&data->stop_m);
         data->stop = 1;
         pthread_mutex_unlock(&data->stop_m);
-        return 1;
+        return (1);
     }
-    return 0;
+    return (0);
 }
 
 int check_death(t_data *data)
@@ -166,12 +172,13 @@ int check_death(t_data *data)
 			pthread_mutex_lock(&data->stop_m);
             data->stop = 1;
             pthread_mutex_unlock(&data->stop_m);
-            return 1;
+        	pthread_mutex_unlock(&data->eating);
+            return (1);
         }
         pthread_mutex_unlock(&data->eating);
         i++;
     }
-    return 0;
+    return (0);
 }
 
 void *monitor(void *arg)

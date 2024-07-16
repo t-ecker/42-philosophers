@@ -1,25 +1,32 @@
-NAME = philosophers
+NAME = philo
 
 CC = CC
 # CFLAGS = -Wall -Werror -Wextra
 
-SRC =	main.c \
-		utils.c
+OBJ =	main.o \
+
+OBJ_TESTER = philo_tester.c
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 all:	$(NAME)
 	clear;
 	@$(MAKE) loading
 	clear;
 
+tester:	all $(OBJ_TESTER)
+	@$(CC) -o $@ $(OBJ_TESTER)
 
-$(NAME):	$(SRC)
+$(NAME):	$(OBJ)
 	@$(CC) $(CFLAGS) -o $@ $^
 
 clean:
+	rm -f *.o *.out
 	clear;
 
 fclean:	clean
-	rm -f $(NAME)
+	rm -f $(NAME) tester
 	clear;
 
 
