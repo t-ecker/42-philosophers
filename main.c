@@ -58,15 +58,14 @@ int	main2(int argc, char **argv)
 		return (free_all(philos, forks, threads), 1);
 	init_philos(&data, philos, threads, forks);
 	data.philo = philos;
-	init_fork_mutex(forks, data);
-	init_threads(philos);
-	join_threads(philos);
+	if (init_fork_mutex(forks, data))
+		return (write(2, "init_fork failed\n", 17), free_all(philos, forks, threads), 1);
+	if (init_threads(philos))
+		return (write(2, "init_threads failed\n", 20), free_all(philos, forks, threads), 1);
+	if (join_threads(philos))
+		return (write(2, "join_threads failed\n", 20), free_all(philos, forks, threads), 1);
 	destroy_forks(forks, data);
-	pthread_mutex_destroy(&data.stop_m);
-	pthread_mutex_destroy(&data.eating);
-	pthread_mutex_destroy(&data.write_m);
-	free_all(philos, forks, threads);
-	return (0);
+	return (free_all(philos, forks, threads), 0);
 }
 
 int	main(int argc, char **argv)

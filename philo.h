@@ -48,9 +48,9 @@ void	init_philos(t_data *data, t_philo *philo,
 void	init_data(t_data *data, char **argv, int argc);
 void	*observer(void *arg);
 void	*philo_routine(void *arg);
-void	join_threads(t_philo *philo);
-void	init_threads(t_philo *philo);
+int		join_threads(t_philo *philo);
+int		init_threads(t_philo *philo);
 void	destroy_forks(pthread_mutex_t *forks, t_data data);
-void	init_fork_mutex(pthread_mutex_t *forks, t_data data);
+int		init_fork_mutex(pthread_mutex_t *forks, t_data data);
 
 #endif
