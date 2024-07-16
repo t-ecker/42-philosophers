@@ -1,10 +1,14 @@
 NAME = philo
 
 CC = CC
-# CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
 
 OBJ =	main.o \
-		utils.c
+		utils.c \
+		initilize.c \
+		observer.c \
+		philo_routine.c \
+		threads.c \
 
 OBJ_TESTER = philo_tester.c
 
@@ -41,4 +45,4 @@ loading:
 
 
 
-.PHONY:			all clean fclean re
+.PHONY:			all clean fclean re loading

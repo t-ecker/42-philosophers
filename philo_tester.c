@@ -36,55 +36,55 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ptr);
 }
 
-char *get_buffer(void)
+char	*get_buffer(void)
 {
-    char *buffer;
-    char tmp_buffer[BUFFERSIZE];
-    int total_size;
-	char *new_buffer;
-	int bytesread;
+	char	*buffer;
+	char	tmp_buffer[BUFFERSIZE];
+	int		total_size;
+	char	*new_buffer;
+	int		bytesread;
 
 	total_size = 0;
 	buffer = NULL;
-    while (fgets(tmp_buffer, sizeof(tmp_buffer), stdin) != NULL)
-    {
-        bytesread = strlen(tmp_buffer);
-        new_buffer = realloc(buffer, total_size + bytesread + 1);
-        if (!new_buffer)
-        {
-            free(buffer);
-            perror("Failed to reallocate memory");
-            return (NULL);
-        }
-        buffer = new_buffer;
-        memcpy(buffer + total_size, tmp_buffer, bytesread);
-        total_size += bytesread;
-    }
-    if (buffer)
-        buffer[total_size] = '\0';
-    return (buffer);
+	while (fgets(tmp_buffer, sizeof(tmp_buffer), stdin) != NULL)
+	{
+		bytesread = strlen(tmp_buffer);
+		new_buffer = realloc(buffer, total_size + bytesread + 1);
+		if (!new_buffer)
+		{
+			free(buffer);
+			perror("Failed to reallocate memory");
+			return (NULL);
+		}
+		buffer = new_buffer;
+		memcpy(buffer + total_size, tmp_buffer, bytesread);
+		total_size += bytesread;
+	}
+	if (buffer)
+		buffer[total_size] = '\0';
+	return (buffer);
 }
 
-void process(char *buffer, int num)
+void	process(char *buffer, int num)
 {
-	int i;
-	int count;
-	char *tmp;
-	char c[2];
-	char *str;
-	int flag;
+	int		i;
+	int		count;
+	char	*tmp;
+	char	c[2];
+	char	*str;
+	int		flag;
 
 	flag = 0;
 	i = 1;
 	printf("\n");
-	while(i <= num)
+	while (i <= num)
 	{
 		c[0] = i + '0';
 		c[1] = '\0';
 		count = 0;
 		str = ft_strjoin(c, " is eating");
 		tmp = buffer;
-		while((tmp = strstr(tmp, str)))
+		while ((tmp = strstr(tmp, str)))
 		{
 			tmp += strlen(str);
 			count++;
@@ -102,16 +102,15 @@ void process(char *buffer, int num)
 	printf("\n");
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	char *buffer;
-	
+	char	*buffer;
+
 	if (argc != 2)
-		return(write(2, "wrong arguments!\n", 17), 1);
+		return (write(2, "wrong arguments!\n", 17), 1);
 	buffer = get_buffer();
 	if (!buffer)
 		return (1);
 	process(buffer, atoi(argv[1]));
 	free(buffer);
 }
-
