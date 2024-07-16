@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 16:43:52 by tecker            #+#    #+#             */
+/*   Updated: 2024/07/16 16:44:45 by tecker           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	is_all_num(char *str)
@@ -59,11 +71,14 @@ int	main2(int argc, char **argv)
 	init_philos(&data, philos, threads, forks);
 	data.philo = philos;
 	if (init_fork_mutex(forks, data))
-		return (write(2, "init_fork failed\n", 17), free_all(philos, forks, threads), 1);
+		return (write(2, "init_fork failed\n", 17),
+			free_all(philos, forks, threads), 1);
 	if (init_threads(philos))
-		return (write(2, "init_threads failed\n", 20), free_all(philos, forks, threads), 1);
+		return (write(2, "init_threads failed\n", 20),
+			free_all(philos, forks, threads), 1);
 	if (join_threads(philos))
-		return (write(2, "join_threads failed\n", 20), free_all(philos, forks, threads), 1);
+		return (write(2, "join_threads failed\n", 20),
+			free_all(philos, forks, threads), 1);
 	destroy_forks(forks, data);
 	return (free_all(philos, forks, threads), 0);
 }
