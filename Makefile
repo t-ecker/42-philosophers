@@ -4,6 +4,7 @@ CC = CC
 # CFLAGS = -Wall -Werror -Wextra
 
 OBJ =	main.o \
+		utils.c
 
 OBJ_TESTER = philo_tester.c
 
