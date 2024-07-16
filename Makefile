@@ -6,7 +6,7 @@
 #    By: tecker <tecker@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/16 16:43:55 by tecker            #+#    #+#              #
-#    Updated: 2024/07/16 16:43:56 by tecker           ###   ########.fr        #
+#    Updated: 2024/07/16 16:47:51 by tecker           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,6 @@ OBJ =	main.o \
 		philo_routine.c \
 		threads.c \
 
-OBJ_TESTER = philo_tester.c
-
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
 
@@ -32,18 +30,15 @@ all:	$(NAME)
 	@$(MAKE) loading
 	clear;
 
-tester:	all $(OBJ_TESTER)
-	@$(CC) -o $@ $(OBJ_TESTER)
-
 $(NAME):	$(OBJ)
 	@$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o *.out
+	rm -f *.o
 	clear;
 
 fclean:	clean
-	rm -f $(NAME) tester
+	rm -f $(NAME)
 	clear;
 
 
