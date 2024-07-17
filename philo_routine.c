@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:44:02 by tecker            #+#    #+#             */
-/*   Updated: 2024/07/16 16:44:03 by tecker           ###   ########.fr       */
+/*   Updated: 2024/07/17 09:47:09 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,15 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->num % 2 != 0)
-		usleep(500);
+	if (philo->num % 2 == 0)
+		ft_usleep(philo->data->time_to_die / 2);
 	while (check_death_status(philo->data) == 0)
 	{
 		routine(philo);
+		if (philo->data->time_to_die
+			> philo->data->time_to_eat + philo->data->time_to_sleep + 100
+			&& philo->data->time_to_die < 990)
+			ft_usleep(100);
 	}
 	return (NULL);
 }
