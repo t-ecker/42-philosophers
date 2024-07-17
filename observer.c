@@ -59,6 +59,7 @@ void	*observer(void *arg)
 	{
 		if (check_death(data) || check_meals_eaten(data))
 			break ;
+		usleep(300);
 	}
 	return (NULL);
 }

@@ -42,11 +42,16 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->num % 2 != 0)
-		usleep(500);
+	if (philo->num % 2 == 0)
+		ft_usleep((philo->data->time_to_die
+				- (philo->data->time_to_die % 100)) / 2);
 	while (check_death_status(philo->data) == 0)
 	{
 		routine(philo);
+		if (philo->data->time_to_die
+			> philo->data->time_to_eat + philo->data->time_to_sleep + 100
+			&& philo->data->time_to_die < 990)
+			ft_usleep(100);
 	}
 	return (NULL);
 }
