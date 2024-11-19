@@ -1,4 +1,4 @@
-#include "philo.h"
+#include "../philo.h"
 
 int	is_all_num(char *str)
 {

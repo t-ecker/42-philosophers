@@ -1,4 +1,4 @@
-#include "philo.h"
+#include "../philo.h"
 
 void	init_data(t_data *data, char **argv, int argc)
 {

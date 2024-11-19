@@ -1,4 +1,4 @@
-#include "philo.h"
+#include "../philo.h"
 
 int	init_fork_mutex(pthread_mutex_t *forks, t_data data)
 {

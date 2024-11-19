@@ -1,4 +1,4 @@
-#include "philo.h"
+#include "../philo.h"
 
 int	check_death_status(t_data *data)
 {

@@ -7,6 +7,10 @@
 #define BUFFERSIZE 1024
 #define ERROR "❌"
 
+
+// how to use?
+// ./philo 2 400 100 100 3 | ./tester 2
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len1;

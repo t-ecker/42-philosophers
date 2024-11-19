@@ -1,4 +1,4 @@
-#include "philo.h"
+#include "../philo.h"
 
 int	check_meals_eaten(t_data *data)
 {
