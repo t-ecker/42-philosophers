@@ -21,7 +21,7 @@
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/42-philosophers.git
+git clone https://github.com/t-ecker/42-philosophers.git
 cd philosophers
 ```
 
