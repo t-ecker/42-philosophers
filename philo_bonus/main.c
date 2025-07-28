@@ -68,7 +68,12 @@ void	cleanup(t_data *data)
 			sem_unlink("/write");
 			data->write = NULL;
 		}
-
+		if (data->access)
+		{
+			sem_close(data->access);
+			sem_unlink("/access");
+			data->access = NULL;
+		}
 	}
 }
 

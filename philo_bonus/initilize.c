@@ -12,16 +12,17 @@ int	init_data(t_data *data, char **argv, int argc)
 		data->max_meals = ft_atoi(argv[5]);
 	else
 		data->max_meals = -1;
-	data->start_time = current_time_in_ms();
 	data->philo = NULL;
 	sem_unlink("/write");
 	sem_unlink("/forks");
+	sem_unlink("/access");
 	// sem_unlink("/allCreated");
 	data->write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
 	// data->allCreated = sem_open("/allCreated", O_CREAT | O_EXCL, 0644, 0);
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, data->philo_count);
+	data->access = sem_open("/access", O_CREAT | O_EXCL, 0644, data->philo_count - 1);
 
-	if (data->write == SEM_FAILED || data->forks == SEM_FAILED)
+	if (data->write == SEM_FAILED || data->forks == SEM_FAILED || data->access == SEM_FAILED)
 		return 1;
 	return (0);
 }

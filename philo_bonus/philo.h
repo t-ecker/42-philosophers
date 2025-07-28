@@ -33,6 +33,7 @@ typedef struct s_data
 	t_philo			*philo;
 	sem_t			*forks;
 	sem_t			*write;
+	sem_t			*access;
 	// sem_t			*allCreated;
 
 }	t_data;
