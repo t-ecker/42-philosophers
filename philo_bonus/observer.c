@@ -22,6 +22,6 @@ void	*checkDeath(void *arg)
 			exit(EXIT_DIED);
 		}
 		sem_post(philo->eating);
-		// usleep(100);
+		usleep(philo->data->philo_count * 50);
 	}
 }
