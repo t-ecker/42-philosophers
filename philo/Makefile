@@ -3,19 +3,19 @@ NAME = philo
 CC = cc
 CFLAGS = -Wall -Werror -Wextra
 
-SRC =	src/main.c \
-		src/utils.c \
-		src/initilize.c \
-		src/observer.c \
-		src/philo_routine.c \
-		src/threads.c
+SRC =	./main.c \
+		./utils.c \
+		./initilize.c \
+		./observer.c \
+		./philo_routine.c \
+		./threads.c
 
-SRC_TESTER = src/philo_tester.c
+SRC_TESTER = ./philo_tester.c
 
 OBJ_DIR = ./obj
 
-OBJ_FILES = $(SRC:src/%.c=$(OBJ_DIR)/%.o)
-OBJ_FILES_TESTER = $(SRC_TESTER:src/%.c=$(OBJ_DIR)/%.o)
+OBJ_FILES = $(SRC:./%.c=$(OBJ_DIR)/%.o)
+OBJ_FILES_TESTER = $(SRC_TESTER:./%.c=$(OBJ_DIR)/%.o)
 
 all:	$(NAME)
 	clear;
@@ -28,7 +28,7 @@ $(NAME): $(OBJ_FILES)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: ./%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 tester:	$(OBJ_FILES_TESTER)
