@@ -16,9 +16,8 @@ int	init_data(t_data *data, char **argv, int argc)
 	sem_unlink("/write");
 	sem_unlink("/forks");
 	sem_unlink("/access");
-	// sem_unlink("/allCreated");
+
 	data->write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
-	// data->allCreated = sem_open("/allCreated", O_CREAT | O_EXCL, 0644, 0);
 	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, data->philo_count);
 	data->access = sem_open("/access", O_CREAT | O_EXCL, 0644, data->philo_count - 1);
 
@@ -40,10 +39,7 @@ int init_philo_data(t_philo *philo, int index)
 	philo->eating = sem_open(semName, O_CREAT | O_EXCL, 0644, 1);
 	free(semName);
 	if (philo->eating == SEM_FAILED)
-	{
-		write(1, "pp\n", 3);
 		return (1);
-	}
 	return (0);
 }
 
@@ -55,7 +51,6 @@ int	init_philos(t_data *data, t_philo *philo)
 	if (!philo)
 		return (1);
 	i = -1;
-	// printf("was: %i", ++i);
 	while (++i < data->philo_count)
 	{
 		if (init_philo_data(&philo[i], i))
@@ -67,7 +62,6 @@ int	init_philos(t_data *data, t_philo *philo)
 			return 1;
 		if (pid == 0)
 		{
-			// write(1, "as\n", 3);
 			philo_routine(&philo[i]);
 			exit(EXIT_SUCCESSFUL);
 		}
