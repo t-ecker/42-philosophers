@@ -9,6 +9,8 @@
 # include <semaphore.h>
 #include <stdbool.h>
 #include <signal.h>
+#include <string.h>
+
 
 # define PHILO_MAX 200
 
@@ -29,13 +31,12 @@ typedef struct s_data
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				max_meals;
+	int				id;
 	long			start_time;
-	t_philo			*philo;
 	sem_t			*forks;
 	sem_t			*write;
 	sem_t			*access;
-	// sem_t			*allCreated;
-
+	sem_t			*terminate;
 }	t_data;
 
 typedef struct s_philo
@@ -43,24 +44,32 @@ typedef struct s_philo
 	int				num;
 	long			last_meal;
 	int				meal_count;
-	sem_t			*eating;
+	bool			shutdown;
+	int				statusCode;
+	char 			*semName_eating;
+	char 			*semName_shutdown;
+	pthread_t 		checkOwnDeath_Thread;
+	pthread_t 		checkOthersDeath_Thread;
+	sem_t			*eating_lock;
+	sem_t			*shutdown_lock;
 	t_data			*data;
-	pid_t			pid;
 }	t_philo;
 
 int		ft_atoi(const char *str);
 void	write_message(char *str, t_data *data, int num, bool stopWriting);
 void	ft_usleep(int time);
 long	current_time_in_ms(void);
-int		init_philos(t_data *data, t_philo *philo);
+int		init_philos(t_data *data);
 int		init_data(t_data *data, char **argv, int argc);
-void	*checkDeath(void *arg);
+void	*checkOwnDeath(void *arg);
+void	*checkOthersDeath(void *arg);
 void	philo_routine(void *arg);
-void 	kill_all_processes(t_data *data);
 void	cleanup(t_data *data);
 char 	*make_unique_semName(char *base, int index);
 bool	check_meals_eaten(t_philo *philo);
 int		is_all_num(char *str);
+bool 	check_shutdown(t_philo *philo);
+
 
 
 #endif
