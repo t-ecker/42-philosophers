@@ -39,32 +39,58 @@ void	cleanup(t_data *data)
 		sem_close(data->terminate);
 		sem_unlink("/terminate");
 	}
+	if (data->mainStop_lock)
+	{
+		sem_close(data->mainStop_lock);
+		sem_unlink("/mainStop_lock");
+	}
+	if (data->max_meals_sem)
+	{
+		sem_close(data->max_meals_sem);
+		sem_unlink("/max_meals");
+	}
+}
+
+bool createMealsEatenThread(t_data *data, pthread_t *checkMealsEaten_Thread, int i)
+{
+	if (data->max_meals > 0)
+	{
+		if (pthread_create(checkMealsEaten_Thread, NULL, check_all_meals_eaten, data) != 0)
+		{
+			while(++i < data->philo_count)
+				sem_post(data->terminate);
+			return false;
+		}
+	}
+	return true;
 }
 
 void waitForProcesses(t_data *data)
 {
 	int i;
 	int status;
-	int finishedEating;
+	pthread_t checkMealsEaten_Thread;
+	bool mealThreadCreated;
 	
 	i = -1;
-	finishedEating = 0;
-	while(1)
+	mealThreadCreated = createMealsEatenThread(data, &checkMealsEaten_Thread, i);
+	waitpid(-1, &status, 0);
+	if (data->max_meals > 0 && mealThreadCreated)
 	{
-		waitpid(-1, &status, 0);
-		status = WEXITSTATUS(status);
-		if (status == EXIT_DIED || status == EXIT_ERROR)
-		{
-			while(++i < data->philo_count - 1)
-				sem_post(data->terminate);
-			break;
-		}
-		if (status == EXIT_MAX_MEALS)
-		{
-			if (++finishedEating >= data->philo_count)
-				break;
-		}
+		sem_wait(data->mainStop_lock);
+		data->mainStop = true;
+		sem_post(data->mainStop_lock);
+		sem_post(data->max_meals_sem);
+		pthread_join(checkMealsEaten_Thread, NULL);
 	}
+	if (WEXITSTATUS(status) == EXIT_ERROR)
+	{
+		while(++i < data->philo_count - 1)
+			sem_post(data->terminate);
+		i = -1;
+	}
+	while(++i < data->philo_count - 1)
+		waitpid(-1, NULL, 0);
 }
 
 int	main(int argc, char **argv)
