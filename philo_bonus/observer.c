@@ -1,54 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   observer.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 20:16:44 by tomecker          #+#    #+#             */
+/*   Updated: 2025/08/05 20:25:16 by tomecker         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./philo.h"
 
 void	check_meals_eaten(t_philo *philo)
 {
 	sem_wait(philo->eating_lock);
-	if (philo->data->max_meals > 0 && (philo->meal_count >= philo->data->max_meals) && !philo->hasFinished)
+	if (philo->data->max_meals > 0
+		&& (philo->meal_count >= philo->data->max_meals)
+		&& !philo->has_finished)
 	{
 		sem_post(philo->data->max_meals_sem);
 		sem_wait(philo->shutdown_lock);
 		philo->shutdown = true;
-		philo->hasFinished = true;
-		philo->statusCode = EXIT_MAX_MEALS;
+		philo->has_finished = true;
+		philo->status_code = EXIT_MAX_MEALS;
 		sem_post(philo->shutdown_lock);
 	}
 	sem_post(philo->eating_lock);
 }
 
-void *check_all_meals_eaten(void *args)
+void	*check_all_meals_eaten(void *args)
 {
-	t_data *data;
-	int finishedEating;
-	int i;
-	bool res;
+	t_data	*data;
+	int		finished_eating;
+	int		i;
+	bool	res;
 
 	i = -1;
-	finishedEating = 0;
+	finished_eating = 0;
 	data = args;
-	while(++i < data->philo_count)
+	while (++i < data->philo_count)
 	{
 		sem_wait(data->max_meals_sem);
-
-		sem_wait(data->mainStop_lock);
-		res = data->mainStop;
-		sem_post(data->mainStop_lock);
+		sem_wait(data->main_stop_lock);
+		res = data->main_stop;
+		sem_post(data->main_stop_lock);
 		if (res)
-			return NULL;
-		if (++finishedEating >= data->philo_count)
+			return (NULL);
+		if (++finished_eating >= data->philo_count)
 		{
 			i = -1;
 			while (++i < data->philo_count)
 				sem_post(data->terminate);
-			break;
+			break ;
 		}
 	}
-	return NULL;
+	return (NULL);
 }
 
-void	*checkOwnDeath(void *arg)
+void	*check_own_death(void *arg)
 {
 	t_philo	*philo;
-	int i;
+	int		i;
 
 	i = -1;
 	philo = (t_philo *)arg;
@@ -60,8 +73,8 @@ void	*checkOwnDeath(void *arg)
 			write_message("died", philo->data, philo->num, true);
 			sem_wait(philo->shutdown_lock);
 			philo->shutdown = true;
-			philo->statusCode = EXIT_DIED;
-			while(++i < philo->data->philo_count)
+			philo->status_code = EXIT_DIED;
+			while (++i < philo->data->philo_count)
 				sem_post(philo->data->terminate);
 			sem_post(philo->shutdown_lock);
 			sem_post(philo->eating_lock);
@@ -70,14 +83,15 @@ void	*checkOwnDeath(void *arg)
 		sem_post(philo->eating_lock);
 		usleep(philo->data->philo_count * 50);
 	}
-	return NULL;
+	return (NULL);
 }
 
-bool check_shutdown(t_philo *philo)
+bool	check_shutdown(t_philo *philo)
 {
-	bool status;
+	bool	status;
+
 	sem_wait(philo->shutdown_lock);
 	status = philo->shutdown;
 	sem_post(philo->shutdown_lock);
-	return(status);
+	return (status);
 }

@@ -8,6 +8,7 @@ SRC =	./main.c \
 		./initilize.c \
 		./observer.c \
 		./philo_routine.c \
+		./helperFunctions.c \
 
 SRC_TESTER = ./philo_tester.c
 

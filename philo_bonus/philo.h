@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 20:28:33 by tomecker          #+#    #+#             */
+/*   Updated: 2025/08/05 20:31:52 by tomecker         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -7,21 +19,20 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <semaphore.h>
-#include <stdbool.h>
-#include <signal.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-
+# include <stdbool.h>
+# include <signal.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 
 # define PHILO_MAX 200
 
 typedef enum e_exit_code
 {
-	EXIT_CLOSED = 0,
-	EXIT_DIED       = 1,
-	EXIT_ERROR      = 2,
-	EXIT_MAX_MEALS  = 3
+	EXIT_CLOSED	= 0,
+	EXIT_DIED = 1,
+	EXIT_ERROR = 2,
+	EXIT_MAX_MEALS = 3
 }	t_exit_code;
 
 typedef struct s_philo	t_philo;
@@ -35,9 +46,9 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				id;
 	long			start_time;
-	bool			mainStop;
+	bool			main_stop;
 	sem_t			*max_meals_sem;
-	sem_t			*mainStop_lock;
+	sem_t			*main_stop_lock;
 	sem_t			*forks;
 	sem_t			*write;
 	sem_t			*access;
@@ -49,13 +60,13 @@ typedef struct s_philo
 	int				num;
 	long			last_meal;
 	int				meal_count;
-	bool			hasFinished;
+	bool			has_finished;
 	bool			shutdown;
-	int				statusCode;
-	char 			*semName_eating;
-	char 			*semName_shutdown;
-	pthread_t 		checkOwnDeath_Thread;
-	pthread_t 		routine_Thread;
+	int				status_code;
+	char			*semname_eating;
+	char			*semname_shutdown;
+	pthread_t		check_own_death_thread;
+	pthread_t		routine_thread;
 	sem_t			*eating_lock;
 	sem_t			*shutdown_lock;
 	t_data			*data;
@@ -67,16 +78,15 @@ void	ft_usleep(int time);
 long	current_time_in_ms(void);
 int		init_philos(t_data *data);
 int		init_data(t_data *data, char **argv, int argc);
-void	*checkOwnDeath(void *arg);
+void	*check_own_death(void *arg);
 void	philo_routine(void *arg);
 void	cleanup(t_data *data);
-char 	*make_unique_semName(char *base, int index);
+char	*make_unique_semname(char *base, int index);
 void	check_meals_eaten(t_philo *philo);
 int		is_all_num(char *str);
-bool 	check_shutdown(t_philo *philo);
+bool	check_shutdown(t_philo *philo);
 void	*check_all_meals_eaten(void *args);
-
-
-
+void	close_shared_sems(t_data *data);
+size_t	ft_strlen(char const *src);
 
 #endif

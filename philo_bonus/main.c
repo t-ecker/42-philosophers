@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/05 20:06:32 by tomecker          #+#    #+#             */
+/*   Updated: 2025/08/05 20:31:15 by tomecker         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./philo.h"
 
 int	check_args(char **argv, int argc)
@@ -19,77 +31,57 @@ int	check_args(char **argv, int argc)
 
 void	cleanup(t_data *data)
 {
-	if (data->forks)
-	{
-		sem_close(data->forks);
-		sem_unlink("/forks");
-	}
-	if (data->write)
-	{
-		sem_close(data->write);
-		sem_unlink("/write");
-	}
-	if (data->access)
-	{
-		sem_close(data->access);
-		sem_unlink("/access");
-	}
-	if (data->terminate)
-	{
-		sem_close(data->terminate);
-		sem_unlink("/terminate");
-	}
-	if (data->mainStop_lock)
-	{
-		sem_close(data->mainStop_lock);
-		sem_unlink("/mainStop_lock");
-	}
-	if (data->max_meals_sem)
-	{
-		sem_close(data->max_meals_sem);
-		sem_unlink("/max_meals");
-	}
+	close_shared_sems(data);
+	sem_unlink("/forks");
+	sem_unlink("/write");
+	sem_unlink("/access");
+	sem_unlink("/mainStop_lock");
+	sem_unlink("/terminate");
+	sem_unlink("/max_meals");
 }
 
-bool createMealsEatenThread(t_data *data, pthread_t *checkMealsEaten_Thread, int i)
+bool	create_meals_eaten_thread(t_data *data,
+		pthread_t *check_meals_eaten_thread, int i)
 {
 	if (data->max_meals > 0)
 	{
-		if (pthread_create(checkMealsEaten_Thread, NULL, check_all_meals_eaten, data) != 0)
+		if (pthread_create(check_meals_eaten_thread, NULL, \
+			check_all_meals_eaten, data) != 0)
 		{
-			while(++i < data->philo_count)
+			while (++i < data->philo_count)
 				sem_post(data->terminate);
-			return false;
+			return (false);
 		}
 	}
-	return true;
+	return (true);
 }
 
-void waitForProcesses(t_data *data)
+void	wait_for_processes(t_data *data)
 {
-	int i;
-	int status;
-	pthread_t checkMealsEaten_Thread;
-	bool mealThreadCreated;
-	
+	int			i;
+	int			status;
+	pthread_t	check_meals_eaten_thread;
+	bool		mealthread_created;
+
 	i = -1;
-	mealThreadCreated = createMealsEatenThread(data, &checkMealsEaten_Thread, i);
+	mealthread_created = create_meals_eaten_thread(data, \
+		&check_meals_eaten_thread, i);
 	waitpid(-1, &status, 0);
-	if (data->max_meals > 0 && mealThreadCreated)
+	if (data->max_meals > 0 && mealthread_created)
 	{
-		sem_wait(data->mainStop_lock);
-		data->mainStop = true;
-		sem_post(data->mainStop_lock);
+		sem_wait(data->main_stop_lock);
+		data->main_stop = true;
+		sem_post(data->main_stop_lock);
 		sem_post(data->max_meals_sem);
-		pthread_join(checkMealsEaten_Thread, NULL);
+		pthread_join(check_meals_eaten_thread, NULL);
 	}
 	if (WEXITSTATUS(status) == EXIT_ERROR)
 	{
-		while(++i < data->philo_count - 1)
+		while (++i < data->philo_count - 1)
 			sem_post(data->terminate);
 		i = -1;
 	}
-	while(++i < data->philo_count - 1)
+	while (++i < data->philo_count - 1)
 		waitpid(-1, NULL, 0);
 }
 
@@ -101,7 +93,7 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init_data(&data, argv, argc) || init_philos(&data))
 		return (cleanup(&data), 1);
-	waitForProcesses(&data);
+	wait_for_processes(&data);
 	cleanup(&data);
-	return(0);
+	return (0);
 }
