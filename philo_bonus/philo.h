@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:28:33 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:21:28 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:29:22 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				id;
 	long			start_time;
-	bool			stop;
+	bool			shutdown;
 	sem_t			*finished_eating;
 	sem_t			*cleanup_mutex;
 	sem_t			*fork_pool;
@@ -62,7 +62,6 @@ typedef struct s_philo
 	long			last_meal;
 	int				meal_count;
 	bool			has_finished;
-	bool			shutdown;
 	int				status_code;
 	char			*semname_eating;
 	char			*semname_shutdown;

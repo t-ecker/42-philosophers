@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:25:11 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:29:40 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	philo_routine(void *arg)
 		routine_thread, &philo) != 0)
 	{
 		sem_wait(philo.shutdown_mutex);
-		philo.shutdown = true;
+		philo.data->shutdown = true;
 		sem_post(philo.shutdown_mutex);
 		pthread_join(philo.check_own_death_thread, NULL);
 		philo.check_own_death_thread = 0;
@@ -121,7 +121,7 @@ void	philo_routine(void *arg)
 	}
 	sem_wait(data->terminate);
 	sem_wait(philo.shutdown_mutex);
-	philo.shutdown = true;
+	philo.data->shutdown = true;
 	sem_post(philo.shutdown_mutex);
 	terminate(&philo, EXIT_CLOSED);
 }

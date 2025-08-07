@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:16:44 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:23:00 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:29:32 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	*check_all_meals_eaten(void *args)
 	{
 		sem_wait(data->finished_eating);
 		sem_wait(data->cleanup_mutex);
-		res = data->stop;
+		res = data->shutdown;
 		sem_post(data->cleanup_mutex);
 		if (res)
 			return (NULL);
@@ -78,7 +78,7 @@ void	*check_own_death(void *arg)
 			}
 			sem_post(philo->data->death_mutex);
 			sem_wait(philo->shutdown_mutex);
-			philo->shutdown = true;
+			philo->data->shutdown = true;
 			philo->status_code = EXIT_DIED;
 			sem_post(philo->shutdown_mutex);
 			sem_post(philo->eating_mutex);
@@ -95,7 +95,7 @@ bool	check_shutdown(t_philo *philo)
 	bool	status;
 
 	sem_wait(philo->shutdown_mutex);
-	status = philo->shutdown;
+	status = philo->data->shutdown;
 	sem_post(philo->shutdown_mutex);
 	return (status);
 }
