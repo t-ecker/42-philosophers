@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:16:44 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:25:16 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 15:38:29 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	check_meals_eaten(t_philo *philo)
 	{
 		sem_post(philo->data->max_meals_sem);
 		sem_wait(philo->shutdown_lock);
-		philo->shutdown = true;
 		philo->has_finished = true;
 		philo->status_code = EXIT_MAX_MEALS;
 		sem_post(philo->shutdown_lock);

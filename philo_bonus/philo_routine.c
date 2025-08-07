@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:33:40 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 15:38:40 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ void	routine(t_philo *philo)
 	philo->last_meal = current_time_in_ms();
 	philo->meal_count++;
 	sem_post(philo->eating_lock);
+	check_meals_eaten(philo);
 	ft_usleep(philo->data->time_to_eat);
 	sem_post(philo->data->forks);
 	sem_post(philo->data->forks);
 	sem_post(philo->data->access);
-	check_meals_eaten(philo);
 	if (check_shutdown(philo))
 		return ;
 	write_message("is sleeping", philo->data, philo->num, false);
