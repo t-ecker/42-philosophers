@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:29:40 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:11:13 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	terminate(t_philo *philo, t_exit_code exitCode)
 {
 			// write(1, "ii\n", 3);
-	close_shared_sems(philo->data);
 	if (philo->check_own_death_thread)
 		pthread_join(philo->check_own_death_thread, NULL);
 	if (philo->routine_thread)
 		pthread_join(philo->routine_thread, NULL);
+	close_shared_sems(philo->data);
 	if (philo->semname_eating)
 	{
 		sem_close(philo->eating_mutex);
