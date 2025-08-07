@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:06:23 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:18:53 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:44:57 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ int	create_semaphores(t_data *data)
 	data->death_mutex = sem_open("/death_mutex", O_CREAT | O_EXCL, 0644, 1);
 	data->cleanup_mutex = sem_open("/mainStop_lock", \
 		O_CREAT | O_EXCL, 0644, 1);
-	data->finished_eating = sem_open("/finished_eating", O_CREAT | O_EXCL, 0644, 0);
+	data->finished_eating = sem_open("/finished_eating", O_CREAT \
+		| O_EXCL, 0644, 0);
 	data->terminate = sem_open("/terminate", O_CREAT | O_EXCL, 0644, 0);
-	data->fork_pool = sem_open("/fork_pool", O_CREAT | O_EXCL, 0644, data->philo_count);
+	data->fork_pool = sem_open("/fork_pool", O_CREAT \
+		| O_EXCL, 0644, data->philo_count);
 	data->fork_guard = sem_open("/fork_guard", O_CREAT | O_EXCL, \
 		0644, data->philo_count - 1);
 	if (data->print_mutex == SEM_FAILED || data->fork_pool == SEM_FAILED

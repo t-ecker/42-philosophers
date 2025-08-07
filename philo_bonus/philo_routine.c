@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 23:11:13 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:43:33 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	terminate(t_philo *philo, t_exit_code exitCode)
 {
-			// write(1, "ii\n", 3);
 	if (philo->check_own_death_thread)
 		pthread_join(philo->check_own_death_thread, NULL);
 	if (philo->routine_thread)
@@ -87,7 +86,8 @@ int	init_philo(t_data *data, t_philo *philo)
 		O_CREAT | O_EXCL, 0644, 1);
 	philo->shutdown_mutex = sem_open(philo->semname_shutdown, O_CREAT \
 		| O_EXCL, 0644, 1);
-	if (philo->eating_mutex == SEM_FAILED || philo->shutdown_mutex == SEM_FAILED)
+	if (philo->eating_mutex == SEM_FAILED
+		|| philo->shutdown_mutex == SEM_FAILED)
 		return (1);
 	philo->data = data;
 	philo->last_meal = current_time_in_ms();

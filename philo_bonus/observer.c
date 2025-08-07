@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:16:44 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:29:32 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 23:48:00 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,30 +57,36 @@ void	*check_all_meals_eaten(void *args)
 	return (NULL);
 }
 
-void	*check_own_death(void *arg)
+void	handle_death(t_philo *philo)
 {
-	t_philo	*philo;
 	int		i;
 
 	i = -1;
+	sem_wait(philo->data->death_mutex);
+	if (!check_shutdown(philo))
+	{
+		write_message("died", philo->data, philo->num);
+		while (++i < philo->data->philo_count)
+			sem_post(philo->data->terminate);
+	}
+	sem_post(philo->data->death_mutex);
+	sem_wait(philo->shutdown_mutex);
+	philo->data->shutdown = true;
+	philo->status_code = EXIT_DIED;
+	sem_post(philo->shutdown_mutex);
+}
+
+void	*check_own_death(void *arg)
+{
+	t_philo	*philo;
+
 	philo = (t_philo *)arg;
 	while (!check_shutdown(philo))
 	{
 		sem_wait(philo->eating_mutex);
 		if (current_time_in_ms() - philo->last_meal > philo->data->time_to_die)
 		{
-			sem_wait(philo->data->death_mutex);
-			if (!check_shutdown(philo))
-			{
-				write_message("died", philo->data, philo->num);
-				while (++i < philo->data->philo_count)
-					sem_post(philo->data->terminate);
-			}
-			sem_post(philo->data->death_mutex);
-			sem_wait(philo->shutdown_mutex);
-			philo->data->shutdown = true;
-			philo->status_code = EXIT_DIED;
-			sem_post(philo->shutdown_mutex);
+			handle_death(philo);
 			sem_post(philo->eating_mutex);
 			break ;
 		}
