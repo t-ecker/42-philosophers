@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:35:49 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:35:50 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:33:13 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ int	check_death(t_data *data)
 	while (i < data->philo_count)
 	{
 		pthread_mutex_lock(&data->eating);
-		if (current_time_in_ms() - data->philo[i].last_meal > data->time_to_die
-			&& data->philo[i].eating == 0)
+		if (current_time_in_ms() - data->philo[i].last_meal > data->time_to_die)
 		{
 			write_message("died", data, data->philo[i].num);
 			pthread_mutex_lock(&data->stop_m);
@@ -67,11 +66,11 @@ void	*observer(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
-	while (check_death_status(data) == 0)
+	while (!check_death_status(data))
 	{
 		if (check_death(data) || check_meals_eaten(data))
 			break ;
-		usleep(300);
+		usleep(data->philo_count * 50);
 	}
 	return (NULL);
 }
