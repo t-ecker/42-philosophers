@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:16:44 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 15:38:29 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:06:56 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,17 @@ void	*check_own_death(void *arg)
 		sem_wait(philo->eating_lock);
 		if (current_time_in_ms() - philo->last_meal > philo->data->time_to_die)
 		{
-			write_message("died", philo->data, philo->num, true);
+			sem_wait(philo->data->death);
+			if (!check_shutdown(philo))
+			{
+				write_message("died", philo->data, philo->num);
+				while (++i < philo->data->philo_count)
+					sem_post(philo->data->terminate);
+			}
+			sem_post(philo->data->death);
 			sem_wait(philo->shutdown_lock);
 			philo->shutdown = true;
 			philo->status_code = EXIT_DIED;
-			while (++i < philo->data->philo_count)
-				sem_post(philo->data->terminate);
 			sem_post(philo->shutdown_lock);
 			sem_post(philo->eating_lock);
 			break ;

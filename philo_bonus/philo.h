@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:28:33 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:31:52 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:07:08 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_data
 	sem_t			*write;
 	sem_t			*access;
 	sem_t			*terminate;
+	sem_t			*death;
 }	t_data;
 
 typedef struct s_philo
@@ -73,7 +74,7 @@ typedef struct s_philo
 }	t_philo;
 
 int		ft_atoi(const char *str);
-void	write_message(char *str, t_data *data, int num, bool stopWriting);
+void	write_message(char *str, t_data *data, int num);
 void	ft_usleep(int time);
 long	current_time_in_ms(void);
 int		init_philos(t_data *data);

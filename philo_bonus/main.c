@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:06:32 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:31:15 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:05:50 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	cleanup(t_data *data)
 	sem_unlink("/mainStop_lock");
 	sem_unlink("/terminate");
 	sem_unlink("/max_meals");
+	sem_unlink("/death");
 }
 
 bool	create_meals_eaten_thread(t_data *data,

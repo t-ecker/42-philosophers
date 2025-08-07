@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:28:42 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:31:20 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:12:10 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,12 @@ void	ft_usleep(int time)
 		usleep(500);
 }
 
-void	write_message(char *str, t_data *data, int num, bool stopWriting)
+void	write_message(char *str, t_data *data, int num)
 {
 	sem_wait(data->write);
 	printf("%ld %i %s\n",
 		current_time_in_ms() - data->start_time, num, str);
-	if (!stopWriting)
-		sem_post(data->write);
+	sem_post(data->write);
 }
 
 char	*make_unique_semname(char *base, int index)
@@ -74,4 +73,6 @@ void	close_shared_sems(t_data *data)
 		sem_close(data->main_stop_lock);
 	if (data->max_meals_sem && data->max_meals_sem != SEM_FAILED)
 		sem_close(data->max_meals_sem);
+	if (data->death && data->death != SEM_FAILED)
+		sem_close(data->death);
 }

@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 15:38:40 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:07:53 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	terminate(t_philo *philo, t_exit_code exitCode)
 {
+			// write(1, "ii\n", 3);
 	close_shared_sems(philo->data);
 	if (philo->check_own_death_thread)
 		pthread_join(philo->check_own_death_thread, NULL);
@@ -40,14 +41,14 @@ void	terminate(t_philo *philo, t_exit_code exitCode)
 
 void	routine(t_philo *philo)
 {
-	write_message("is thinking", philo->data, philo->num, false);
+	write_message("is thinking", philo->data, philo->num);
 	sem_wait(philo->data->access);
 	sem_wait(philo->data->forks);
-	write_message("has taken a fork", philo->data, philo->num, false);
+	write_message("has taken a fork", philo->data, philo->num);
 	sem_wait(philo->data->forks);
-	write_message("has taken a fork", philo->data, philo->num, false);
+	write_message("has taken a fork", philo->data, philo->num);
 	sem_wait(philo->eating_lock);
-	write_message("is eating", philo->data, philo->num, false);
+	write_message("is eating", philo->data, philo->num);
 	philo->last_meal = current_time_in_ms();
 	philo->meal_count++;
 	sem_post(philo->eating_lock);
@@ -58,7 +59,7 @@ void	routine(t_philo *philo)
 	sem_post(philo->data->access);
 	if (check_shutdown(philo))
 		return ;
-	write_message("is sleeping", philo->data, philo->num, false);
+	write_message("is sleeping", philo->data, philo->num);
 	ft_usleep(philo->data->time_to_sleep);
 }
 
