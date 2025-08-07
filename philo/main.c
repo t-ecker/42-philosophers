@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:35:40 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:35:41 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/05 21:54:43 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_all_num(char *str)
 int	check_args(char **argv, int argc)
 {
 	if (argc < 5 || argc > 6)
-		return (write(2, "Invalid number of arguments\n", 30), 1);
+		return (write(2, "Invalid number of arguments\n", 29), 1);
 	if (is_all_num(argv[1]) || ft_atoi(argv[1]) <= 0 || ft_atoi(argv[1]) > 200)
 		return (write(2, "Wrong amound of philosophers\n", 29), 1);
 	if (is_all_num(argv[2]) || ft_atoi(argv[2]) <= 0)
@@ -55,7 +55,7 @@ void	free_all(t_philo *philos, pthread_mutex_t *forks, pthread_t *threads)
 		free(threads);
 }
 
-int	main2(int argc, char **argv)
+int	start(int argc, char **argv)
 {
 	t_data			data;
 	t_philo			*philos;
@@ -87,5 +87,5 @@ int	main(int argc, char **argv)
 {
 	if (check_args(argv, argc))
 		return (1);
-	return (main2(argc, argv));
+	return (start(argc, argv));
 }
