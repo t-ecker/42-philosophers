@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:06:32 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:05:50 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:21:35 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	wait_for_processes(t_data *data)
 	waitpid(-1, &status, 0);
 	if (data->max_meals > 0 && mealthread_created)
 	{
-		sem_wait(data->main_stop_lock);
-		data->main_stop = true;
-		sem_post(data->main_stop_lock);
-		sem_post(data->max_meals_sem);
+		sem_wait(data->cleanup_mutex);
+		data->stop = true;
+		sem_post(data->cleanup_mutex);
+		sem_post(data->finished_eating);
 		pthread_join(check_meals_eaten_thread, NULL);
 	}
 	if (WEXITSTATUS(status) == EXIT_ERROR)

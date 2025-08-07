@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:28:33 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:07:08 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:21:28 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				id;
 	long			start_time;
-	bool			main_stop;
-	sem_t			*max_meals_sem;
-	sem_t			*main_stop_lock;
-	sem_t			*forks;
-	sem_t			*write;
-	sem_t			*access;
+	bool			stop;
+	sem_t			*finished_eating;
+	sem_t			*cleanup_mutex;
+	sem_t			*fork_pool;
+	sem_t			*print_mutex;
+	sem_t			*fork_guard;
 	sem_t			*terminate;
-	sem_t			*death;
+	sem_t			*death_mutex;
 }	t_data;
 
 typedef struct s_philo
@@ -68,8 +68,8 @@ typedef struct s_philo
 	char			*semname_shutdown;
 	pthread_t		check_own_death_thread;
 	pthread_t		routine_thread;
-	sem_t			*eating_lock;
-	sem_t			*shutdown_lock;
+	sem_t			*eating_mutex;
+	sem_t			*shutdown_mutex;
 	t_data			*data;
 }	t_philo;
 

@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:28:42 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:12:10 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:20:13 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void	ft_usleep(int time)
 
 void	write_message(char *str, t_data *data, int num)
 {
-	sem_wait(data->write);
+	sem_wait(data->print_mutex);
 	printf("%ld %i %s\n",
 		current_time_in_ms() - data->start_time, num, str);
-	sem_post(data->write);
+	sem_post(data->print_mutex);
 }
 
 char	*make_unique_semname(char *base, int index)
@@ -61,18 +61,18 @@ char	*make_unique_semname(char *base, int index)
 
 void	close_shared_sems(t_data *data)
 {
-	if (data->forks && data->forks != SEM_FAILED)
-		sem_close(data->forks);
-	if (data->write && data->write != SEM_FAILED)
-		sem_close(data->write);
-	if (data->access && data->access != SEM_FAILED)
-		sem_close(data->access);
+	if (data->fork_pool && data->fork_pool != SEM_FAILED)
+		sem_close(data->fork_pool);
+	if (data->print_mutex && data->print_mutex != SEM_FAILED)
+		sem_close(data->print_mutex);
+	if (data->fork_guard && data->fork_guard != SEM_FAILED)
+		sem_close(data->fork_guard);
 	if (data->terminate && data->terminate != SEM_FAILED)
 		sem_close(data->terminate);
-	if (data->main_stop_lock && data->main_stop_lock != SEM_FAILED)
-		sem_close(data->main_stop_lock);
-	if (data->max_meals_sem && data->max_meals_sem != SEM_FAILED)
-		sem_close(data->max_meals_sem);
-	if (data->death && data->death != SEM_FAILED)
-		sem_close(data->death);
+	if (data->cleanup_mutex && data->cleanup_mutex != SEM_FAILED)
+		sem_close(data->cleanup_mutex);
+	if (data->finished_eating && data->finished_eating != SEM_FAILED)
+		sem_close(data->finished_eating);
+	if (data->death_mutex && data->death_mutex != SEM_FAILED)
+		sem_close(data->death_mutex);
 }

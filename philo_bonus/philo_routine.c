@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:07:53 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:25:11 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void	terminate(t_philo *philo, t_exit_code exitCode)
 		pthread_join(philo->routine_thread, NULL);
 	if (philo->semname_eating)
 	{
-		sem_close(philo->eating_lock);
+		sem_close(philo->eating_mutex);
 		sem_unlink(philo->semname_eating);
 		free(philo->semname_eating);
 		philo->semname_eating = NULL;
 	}
 	if (philo->semname_shutdown)
 	{
-		sem_close(philo->shutdown_lock);
+		sem_close(philo->shutdown_mutex);
 		sem_unlink(philo->semname_shutdown);
 		free(philo->semname_shutdown);
 		philo->semname_shutdown = NULL;
@@ -42,21 +42,21 @@ void	terminate(t_philo *philo, t_exit_code exitCode)
 void	routine(t_philo *philo)
 {
 	write_message("is thinking", philo->data, philo->num);
-	sem_wait(philo->data->access);
-	sem_wait(philo->data->forks);
+	sem_wait(philo->data->fork_guard);
+	sem_wait(philo->data->fork_pool);
 	write_message("has taken a fork", philo->data, philo->num);
-	sem_wait(philo->data->forks);
+	sem_wait(philo->data->fork_pool);
 	write_message("has taken a fork", philo->data, philo->num);
-	sem_wait(philo->eating_lock);
+	sem_wait(philo->eating_mutex);
 	write_message("is eating", philo->data, philo->num);
 	philo->last_meal = current_time_in_ms();
 	philo->meal_count++;
-	sem_post(philo->eating_lock);
+	sem_post(philo->eating_mutex);
 	check_meals_eaten(philo);
 	ft_usleep(philo->data->time_to_eat);
-	sem_post(philo->data->forks);
-	sem_post(philo->data->forks);
-	sem_post(philo->data->access);
+	sem_post(philo->data->fork_pool);
+	sem_post(philo->data->fork_pool);
+	sem_post(philo->data->fork_guard);
 	if (check_shutdown(philo))
 		return ;
 	write_message("is sleeping", philo->data, philo->num);
@@ -83,11 +83,11 @@ int	init_philo(t_data *data, t_philo *philo)
 		return (1);
 	sem_unlink(philo->semname_eating);
 	sem_unlink(philo->semname_shutdown);
-	philo->eating_lock = sem_open(philo->semname_eating, \
+	philo->eating_mutex = sem_open(philo->semname_eating, \
 		O_CREAT | O_EXCL, 0644, 1);
-	philo->shutdown_lock = sem_open(philo->semname_shutdown, O_CREAT \
+	philo->shutdown_mutex = sem_open(philo->semname_shutdown, O_CREAT \
 		| O_EXCL, 0644, 1);
-	if (philo->eating_lock == SEM_FAILED || philo->shutdown_lock == SEM_FAILED)
+	if (philo->eating_mutex == SEM_FAILED || philo->shutdown_mutex == SEM_FAILED)
 		return (1);
 	philo->data = data;
 	philo->last_meal = current_time_in_ms();
@@ -112,16 +112,16 @@ void	philo_routine(void *arg)
 	if (pthread_create(&philo.routine_thread, NULL, \
 		routine_thread, &philo) != 0)
 	{
-		sem_wait(philo.shutdown_lock);
+		sem_wait(philo.shutdown_mutex);
 		philo.shutdown = true;
-		sem_post(philo.shutdown_lock);
+		sem_post(philo.shutdown_mutex);
 		pthread_join(philo.check_own_death_thread, NULL);
 		philo.check_own_death_thread = 0;
 		terminate(&philo, EXIT_ERROR);
 	}
 	sem_wait(data->terminate);
-	sem_wait(philo.shutdown_lock);
+	sem_wait(philo.shutdown_mutex);
 	philo.shutdown = true;
-	sem_post(philo.shutdown_lock);
+	sem_post(philo.shutdown_mutex);
 	terminate(&philo, EXIT_CLOSED);
 }

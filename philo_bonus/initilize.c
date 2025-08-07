@@ -6,7 +6,7 @@
 /*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:06:23 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 22:05:20 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:18:53 by tomecker         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 int	create_semaphores(t_data *data)
 {
-	sem_unlink("/write");
-	sem_unlink("/max_meals");
-	sem_unlink("/forks");
-	sem_unlink("/death");
-	sem_unlink("/access");
+	sem_unlink("/print_mutex");
+	sem_unlink("/finished_eating");
+	sem_unlink("/fork_pool");
+	sem_unlink("/death_mutex");
+	sem_unlink("/fork_guard");
 	sem_unlink("/terminate");
 	sem_unlink("/mainStop_lock");
-	data->write = sem_open("/write", O_CREAT | O_EXCL, 0644, 1);
-	data->death = sem_open("/death", O_CREAT | O_EXCL, 0644, 1);
-	data->main_stop_lock = sem_open("/mainStop_lock", \
+	data->print_mutex = sem_open("/print_mutex", O_CREAT | O_EXCL, 0644, 1);
+	data->death_mutex = sem_open("/death_mutex", O_CREAT | O_EXCL, 0644, 1);
+	data->cleanup_mutex = sem_open("/mainStop_lock", \
 		O_CREAT | O_EXCL, 0644, 1);
-	data->max_meals_sem = sem_open("/max_meals", O_CREAT | O_EXCL, 0644, 0);
+	data->finished_eating = sem_open("/finished_eating", O_CREAT | O_EXCL, 0644, 0);
 	data->terminate = sem_open("/terminate", O_CREAT | O_EXCL, 0644, 0);
-	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, data->philo_count);
-	data->access = sem_open("/access", O_CREAT | O_EXCL, \
+	data->fork_pool = sem_open("/fork_pool", O_CREAT | O_EXCL, 0644, data->philo_count);
+	data->fork_guard = sem_open("/fork_guard", O_CREAT | O_EXCL, \
 		0644, data->philo_count - 1);
-	if (data->write == SEM_FAILED || data->forks == SEM_FAILED
-		|| data->access == SEM_FAILED || data->terminate == SEM_FAILED
-		|| data->main_stop_lock == SEM_FAILED
-		|| data->max_meals_sem == SEM_FAILED
-		|| data->death == SEM_FAILED)
+	if (data->print_mutex == SEM_FAILED || data->fork_pool == SEM_FAILED
+		|| data->fork_guard == SEM_FAILED || data->terminate == SEM_FAILED
+		|| data->cleanup_mutex == SEM_FAILED
+		|| data->finished_eating == SEM_FAILED
+		|| data->death_mutex == SEM_FAILED)
 		return (1);
 	return (0);
 }
