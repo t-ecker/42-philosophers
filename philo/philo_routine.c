@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:35:52 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 15:14:33 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/08 15:36:35 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	routine(t_philo *philo)
 	write_message("has taken a fork", philo->data, philo->num);
 	if (philo->data->philo_count == 1)
 	{
-		ft_usleep(philo->data->time_to_die);
+		ft_usleep(philo->data->time_to_die + 1);
 		pthread_mutex_unlock(philo->left_f);
 		return ;
 	}
@@ -43,6 +43,8 @@ void	routine(t_philo *philo)
 	ft_usleep(philo->data->time_to_eat);
 	pthread_mutex_unlock(philo->right_f);
 	pthread_mutex_unlock(philo->left_f);
+	if (check_death_status(philo->data))
+		return ;
 	write_message("is sleeping", philo->data, philo->num);
 	ft_usleep(philo->data->time_to_sleep);
 }

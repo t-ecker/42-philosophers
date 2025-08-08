@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/07 23:43:33 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/08 16:05:32 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,12 @@ void	terminate(t_philo *philo, t_exit_code exitCode)
 void	routine(t_philo *philo)
 {
 	write_message("is thinking", philo->data, philo->num);
+	if (philo->data->philo_count == 1)
+		return (ft_usleep(philo->data->time_to_die + 1));
 	sem_wait(philo->data->fork_guard);
 	sem_wait(philo->data->fork_pool);
+	if (check_shutdown(philo))
+		return ;
 	write_message("has taken a fork", philo->data, philo->num);
 	sem_wait(philo->data->fork_pool);
 	write_message("has taken a fork", philo->data, philo->num);
