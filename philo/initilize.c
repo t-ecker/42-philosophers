@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initilize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tomecker <tomecker@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:35:45 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/05 20:35:46 by tomecker         ###   ########.fr       */
+/*   Updated: 2025/08/09 12:46:36 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,13 @@ void	init_philos(t_data *data, t_philo *philo,
 		philo[i].data = data;
 		philo[i].eating = 0;
 		philo[i].thread = threads[i];
-		philo[i].left_f = &forks[i];
-		philo[i].right_f = &forks[(i + 1) % data->philo_count];
+		if (i == data->philo_count - 1) {
+			philo[i].left_f = &forks[0];
+			philo[i].right_f = &forks[i];
+		} else {
+			philo[i].left_f = &forks[i];
+			philo[i].right_f = &forks[(i + 1) % data->philo_count];
+		}
 		i++;
 	}
 }
