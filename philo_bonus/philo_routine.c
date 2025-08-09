@@ -6,7 +6,7 @@
 /*   By: tecker <tecker@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/05 20:18:51 by tomecker          #+#    #+#             */
-/*   Updated: 2025/08/08 16:05:32 by tecker           ###   ########.fr       */
+/*   Updated: 2025/08/09 13:02:19 by tecker           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	terminate(t_philo *philo, t_exit_code exitCode)
 
 void	routine(t_philo *philo)
 {
-	write_message("is thinking", philo->data, philo->num);
 	if (philo->data->philo_count == 1)
 		return (ft_usleep(philo->data->time_to_die + 1));
 	sem_wait(philo->data->fork_guard);
@@ -49,6 +48,8 @@ void	routine(t_philo *philo)
 		return ;
 	write_message("has taken a fork", philo->data, philo->num);
 	sem_wait(philo->data->fork_pool);
+	if (check_shutdown(philo))
+		return ;
 	write_message("has taken a fork", philo->data, philo->num);
 	sem_wait(philo->eating_mutex);
 	write_message("is eating", philo->data, philo->num);
@@ -72,7 +73,10 @@ void	*routine_thread(void *args)
 
 	philo = args;
 	while (!check_shutdown(philo))
+	{
+		write_message("is thinking", philo->data, philo->num);
 		routine(philo);
+	}
 	return (NULL);
 }
 
